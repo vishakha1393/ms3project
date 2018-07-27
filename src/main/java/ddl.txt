@@ -1,0 +1,4 @@
+"CREATE table employee1 (A varchar(115), B varchar(115),C varchar(100), D varchar(110), K varchar(355), F varchar(355), G varchar(50), H varchar(60), I varchar(61), J varchar(150))
+"INSERT INTO EMPLOYEE1(A,B,C,D,E,F,G,H,I,J) VALUES(?,?,?,?,?,?,?,?,?,?)"
+
+

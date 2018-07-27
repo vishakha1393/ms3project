@@ -3,17 +3,23 @@ import com.opencsv.CSVReader;
 import java.io.*;
 import java.sql.*;
 import java.util.Scanner;
+import java.util.logging.FileHandler;
+import java.util.logging.Logger;
+import java.util.logging.SimpleFormatter;
 
 public class Main {
 
-    public static void main(String[] args) throws ClassNotFoundException, SQLException {
+    public static void main(String[] args) throws ClassNotFoundException, SQLException, IOException {
         String driver = "org.sqlite.JDBC";
-
         String file = "C:/Program Files/Java/jdk1.8.0_181/bin/ms3.csv";
-
+        Logger logger = Logger.getLogger("MyLog");
+        FileHandler fh;
         Class.forName(driver);
         String dbName = "cp2.db";
         String dbUrl = "jdbc:sqlite:" + dbName;
+        int counter=0;
+        int valid=0;
+        int invalid=0;
         Connection conn = DriverManager.getConnection(dbUrl);
         //create table
         Statement st = conn.createStatement();
@@ -33,35 +39,33 @@ public class Main {
             // file reader as a parameter
             CSVReader csvReader = new CSVReader(filereader);
             String[] s;
-int counter=0;
-int valid=0;
-int invalid=0;
+
             // we are going to read data line by line
             while ((s = csvReader.readNext()) != null) {
+             /*   System.out.print(s[0]+"\t");
 
+                System.out.print(s[1]+"\t");
+                System.out.print(s[2]+"\t");
+                System.out.print(s[3]+"\t");
+                System.out.print(s[4]+"\t");
+                System.out.print(s[5]+"\t");
+                System.out.print(s[6]+"\t");
+                System.out.print(s[7]+"\t");
+                System.out.print(s[8]+"\t");
+
+                System.out.println(s[9]+"\t");*/
 
                 if(countColumn(s)){
 
 valid++;
 
-                 /*   System.out.print(s[0]+"\t");
 
-                    System.out.print(s[1]+"\t");
-                    System.out.print(s[2]+"\t");
-                    System.out.print(s[3]+"\t");
-                    System.out.print(s[4]+"\t");
-                    System.out.print(s[5]+"\t");
-                    System.out.print(s[6]+"\t");
-                    System.out.print(s[7]+"\t");
-                    System.out.print(s[8]+"\t");
-
-                    System.out.println(s[9]+"\t");*/
                     //System.out.println();
 
-                    pstmt.setString(1, s[0]);
-                    pstmt.setString(2, s[1]);
-                    pstmt.setString(3, s[2]);
-                    pstmt.setString(4, s[3]);
+                   pstmt.setString(1, s[0]);
+                 pstmt.setString(2, s[1]);
+                  pstmt.setString(3, s[2]);
+                   pstmt.setString(4, s[3]);
                     pstmt.setString(5, s[4]);
                     pstmt.setString(6, s[5]);
                     pstmt.setString(7, s[6]);
@@ -70,6 +74,8 @@ valid++;
                     pstmt.setString(10, s[9]);
                     //pstmt.executeUpdate();
                     counter++;
+                    System.out.println("count:"+counter);
+
                     pstmt.addBatch();
 
                     if(counter%100==0)
@@ -77,7 +83,7 @@ valid++;
                         pstmt.executeBatch();
 
                         // System.out.print("count:"+counter);
-                         System.out.println("count:"+counter);
+
                     }
                 }
                     else
@@ -85,6 +91,7 @@ valid++;
                     invalid++;
                     System.out.println("counter:"+counter+"\tNULL found");
                 }
+
 
 
             }
@@ -97,6 +104,19 @@ valid++;
             e1.printStackTrace();
         }
 
+        fh = new FileHandler("C:\\Users\\Vishakha\\IdeaProjects\\maven\\src\\main\\java\\MyLogFile.log");
+        logger.addHandler(fh);
+        //logger.setLevel(Level.ALL);
+        SimpleFormatter formatter = new SimpleFormatter();
+        fh.setFormatter(formatter);
+
+        // the following statement is used to log any messages
+        logger.info("My first log");
+
+
+        // the following statement is used to log any messages
+        logger.info("Valid Insertion:\t"+valid);
+        logger.info("InValid Insertion:\t"+invalid);
 
 
 
